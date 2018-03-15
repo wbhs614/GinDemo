@@ -175,6 +175,31 @@ func UpdateStudentInfo(c *gin.Context) {
 				dataMap["message"] = "该学生不存在"
 			}
 		}
+		db.Close()
+	}
+	c.JSON(http.StatusOK, dataMap)
+}
+
+func GetStudentInfoById(c *gin.Context) {
+	studentId := c.PostForm("studentid")
+	dataMap := make(map[string]interface{})
+	if len(studentId) == 0 {
+		dataMap["code"] = 2
+		dataMap["message"] = "参数错误：缺少studentId"
+	} else {
+		db, err := utils.OpenGinDB()
+		where := fmt.Sprintf("studentid=%s", studentId)
+		studentTable := db.Table("studentInfo")
+		st, err := studentTable.Where(where).First()
+		if err != nil {
+			dataMap["code"] = 3
+			dataMap["message"] = "查询学生信息失败"
+		} else {
+			dataMap["code"] = 0
+			dataMap["message"] = "获取学生信息成功"
+			dataMap["data"] = st
+		}
+		db.Close()
 	}
 	c.JSON(http.StatusOK, dataMap)
 }

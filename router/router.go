@@ -17,7 +17,10 @@ func Test() {
 		v1.POST("/getStudentList", controllers.GetStudentDetail)
 		v1.POST("/addStudentInfo", controllers.AddStudentInfo)
 		v1.POST("/updateStudentinfo", controllers.UpdateStudentInfo)
+		v1.POST("/getStudentInfo", controllers.GetStudentInfoById)
+		fmt.Println("进入路由啦")
 	}
+
 	r.Run(":9091")
 }
 
