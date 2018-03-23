@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func LoginTest(c *gin.Context) {
@@ -43,6 +44,13 @@ func AddStudentInfo(c *gin.Context) {
 			dataMap["code"] = 4
 			dataMap["message"] = "查询数据库失败"
 		} else {
+			lowSex := strings.ToLower(sex)
+			if lowSex != "f" && lowSex != "m" {
+				dataMap["code"] = 6
+				dataMap["message"] = "性别格式不对"
+				c.JSON(http.StatusOK, dataMap)
+				return
+			}
 			params := make(map[string]interface{})
 			params["name"] = name
 			params["age"] = age
@@ -57,10 +65,10 @@ func AddStudentInfo(c *gin.Context) {
 			if err != nil {
 				dataMap["code"] = 3
 				dataMap["errInfo"] = err
-				dataMap["message"] = "插入数据失败"
+				dataMap["message"] = "添加数据失败"
 			} else {
 				dataMap["code"] = 0
-				dataMap["message"] = "插入数据成功"
+				dataMap["message"] = "添加数据成功"
 			}
 		}
 		db.Close()
@@ -100,6 +108,7 @@ func GetStudentDetail(c *gin.Context) {
 		c.JSON(http.StatusOK, dataMap)
 	}
 	db.Close()
+	c.JSON(http.StatusOK, dataMap)
 }
 
 func UpdateStudentInfo(c *gin.Context) {
@@ -135,6 +144,13 @@ func UpdateStudentInfo(c *gin.Context) {
 					params["age"] = intage
 				}
 				if len(sex) > 0 {
+					lowSex := strings.ToLower(sex)
+					if lowSex != "f" && lowSex != "m" {
+						dataMap["code"] = 6
+						dataMap["message"] = "性别格式不对"
+						c.JSON(http.StatusOK, dataMap)
+						return
+					}
 					params["sex"] = sex
 				}
 				if len(address) > 0 {
@@ -175,7 +191,6 @@ func UpdateStudentInfo(c *gin.Context) {
 				dataMap["message"] = "该学生不存在"
 			}
 		}
-		db.Close()
 	}
 	c.JSON(http.StatusOK, dataMap)
 }
@@ -195,9 +210,14 @@ func GetStudentInfoById(c *gin.Context) {
 			dataMap["code"] = 3
 			dataMap["message"] = "查询学生信息失败"
 		} else {
-			dataMap["code"] = 0
-			dataMap["message"] = "获取学生信息成功"
-			dataMap["data"] = st
+			if len(st) == 0 {
+				dataMap["code"] = 4
+				dataMap["message"] = "没有查询到学生信息"
+			} else {
+				dataMap["code"] = 0
+				dataMap["message"] = "获取学生信息成功"
+				dataMap["data"] = st
+			}
 		}
 		db.Close()
 	}

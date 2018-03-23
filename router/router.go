@@ -14,13 +14,21 @@ func Test() {
 	{
 		v1.POST("/test", loginFunc)
 		v1.POST("/test2", controllers.LoginTest)
-		v1.POST("/getStudentList", controllers.GetStudentDetail)
-		v1.POST("/addStudentInfo", controllers.AddStudentInfo)
-		v1.POST("/updateStudentinfo", controllers.UpdateStudentInfo)
-		v1.POST("/getStudentInfo", controllers.GetStudentInfoById)
-		fmt.Println("进入路由啦")
-	}
+		//学生信息的接口
+		v1.POST("/student/getStudentList", controllers.GetStudentDetail)
+		v1.POST("/student/addStudentInfo", controllers.AddStudentInfo)
+		v1.POST("/student/updateStudentinfo", controllers.UpdateStudentInfo)
+		v1.POST("/student/getStudentInfo", controllers.GetStudentInfoById)
+		//课程的接口
+		v1.POST("/course/addCourse", controllers.AddCourse)
+		v1.POST("/course/getCourseList", controllers.GetCourseList)
+		v1.POST("/course/addCoursePlan", controllers.AddCoursePlane)
+		v1.POST("/course/getCoursePlanList", controllers.GetCoursePlanList)
+		v1.POST("/course/addSelectCoursePlan", controllers.AddSelectCoursePlan)
+		v1.POST("/course/getStListByChooseid", controllers.GetInfoListByChooseid)
+		v1.POST("/course/getChListByStudentid", controllers.GetInfoListByStudentid)
 
+	}
 	r.Run(":9091")
 }
 
